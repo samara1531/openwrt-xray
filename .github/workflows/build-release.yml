@@ -53,8 +53,9 @@ jobs:
         run: |
           cd sdk
           ./scripts/feeds update -a
-          rm -rf feeds/packages/net/${PACKAGE_NAME} || true
-          ln -s $GITHUB_WORKSPACE package/${PACKAGE_NAME}
+          mkdir -p package
+          rm -rf sdk/package/${PACKAGE_NAME} || true
+          ln -s $GITHUB_WORKSPACE sdk/package/${PACKAGE_NAME}
           ./scripts/feeds install -a
 
       - name: Setup Go
@@ -73,7 +74,7 @@ jobs:
           echo "📦 Searching APK..."
           ARCH_SUFFIX=${{ matrix.arch }}
           mkdir -p release_apk
-          for f in $(find sdk/bin/ -type f -name "openwrt-xray*.apk"); do
+          for f in $(find sdk/bin/ -type f -name "xray-core*.apk"); do
             cp "$f" "release_apk/$(basename $f .apk)-${ARCH_SUFFIX}.apk"
           done
           echo "📂 Result:"
