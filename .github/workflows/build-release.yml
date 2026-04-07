@@ -54,8 +54,8 @@ jobs:
           cd sdk
           ./scripts/feeds update -a
           mkdir -p package
-          rm -rf sdk/package/${PACKAGE_NAME} || true
-          ln -s $GITHUB_WORKSPACE sdk/package/${PACKAGE_NAME}
+          rm -rf package/openwrt-xray || true
+          ln -s $GITHUB_WORKSPACE package/openwrt-xray
           ./scripts/feeds install -a
 
       - name: Setup Go
