@@ -1,6 +1,6 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=openwrt-xray
+PKG_NAME:=xray-core
 PKG_VERSION:=26.3.27
 PKG_RELEASE:=1
 
