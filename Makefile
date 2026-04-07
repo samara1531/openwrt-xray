@@ -35,7 +35,7 @@ menu "Xray Configuration"
 	depends on PACKAGE_$(PKG_NAME)
 
 config PACKAGE_XRAY_ENABLE_GOPROXY_IO
-	bool "Use goproxy.io to speed up module fetching (recommended for some network situations)"
+	bool "Use goproxy.io to speed up module fetching (recommended)"
 	default n
 
 endmenu
@@ -61,6 +61,25 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/xray $(1)/usr/bin/xray
+
+	# init.d
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/etc/init.d/xray $(1)/etc/init.d/xray
+
+	# uci config
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/etc/config/xray $(1)/etc/config/xray
+
+	# example config.json
+	$(INSTALL_DIR) $(1)/etc/xray
+	$(INSTALL_CONF) ./files/etc/xray/config.json.example $(1)/etc/xray/config.json.example
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+[ -n "$${IPKG_INSTROOT}" ] || {
+	[ -f /etc/xray/config.json ] || cp /etc/xray/config.json.example /etc/xray/config.json
+}
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
