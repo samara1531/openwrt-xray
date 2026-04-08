@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  PACKAGE_NAME: xray-core
+  PACKAGE_NAME: openwrt-xray
   OPENWRT_VERSION: 25.12.2
   CACHE_DIR: ~/cache
 
@@ -74,7 +74,7 @@ jobs:
           echo "📦 Searching APK..."
           ARCH_SUFFIX=${{ matrix.arch }}
           mkdir -p release_apk
-          for f in $(find sdk/bin/ -type f -name "xray-core*.apk"); do
+          for f in $(find sdk/bin/ -type f -name "openwrt-xray*.apk"); do
             cp "$f" "release_apk/$(basename $f .apk)-${ARCH_SUFFIX}.apk"
           done
           echo "📂 Result:"
