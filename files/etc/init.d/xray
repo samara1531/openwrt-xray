@@ -3,18 +3,51 @@
 USE_PROCD=1
 START=99
 STOP=10
-NAME=xray
-BIN=/usr/bin/xray
-CONF=/etc/xray/config.json
+
+NAME="xray"
+BIN="/usr/bin/xray"
+CONF="/etc/xray/config.json"
+LOG="/tmp/xray-init.log"
 
 start_service() {
-    [ -f "$BIN" ] || { echo "? Xray binary not found"; return 1; }
-    [ -f "$CONF" ] || { echo "? Config not found, copying example"; cp /etc/xray/config.json.example $CONF; }
+    echo "==== Xray start $(date) ====" >> $LOG
+
+    # бинарник
+    if [ ! -x "$BIN" ]; then
+        echo "? Binary not found: $BIN" >> $LOG
+        return 1
+    fi
+
+    # конфиг
+    if [ ! -f "$CONF" ]; then
+        echo "? Config not found, copying example" >> $LOG
+        cp /etc/xray/config.json.example "$CONF"
+    fi
+
+    # проверка JSON
+    $BIN run -test -c "$CONF" >> $LOG 2>&1
+    if [ $? -ne 0 ]; then
+        echo "? Config test failed, not starting" >> $LOG
+        return 1
+    fi
+
+    echo "? Config OK, starting Xray" >> $LOG
 
     procd_open_instance "$NAME"
     procd_set_param command "$BIN" run -c "$CONF"
-    procd_set_param respawn
+
+    # лог прямо в файл
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+
+    # НЕ даём уйти в спам-краш
+    procd_set_param respawn 5 10 0
+
     procd_close_instance
+}
+
+stop_service() {
+    echo "==== Xray stop $(date) ====" >> $LOG
 }
 
 reload_service() {
