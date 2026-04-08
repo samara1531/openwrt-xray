@@ -58,6 +58,10 @@ jobs:
           ln -s $GITHUB_WORKSPACE package/openwrt-xray
           ./scripts/feeds install -a
 
+      - name: Fix init.d line endings
+        run: |
+          find package/openwrt-xray/files/etc/init.d -type f -exec dos2unix {} +
+
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
