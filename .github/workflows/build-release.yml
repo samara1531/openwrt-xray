@@ -60,7 +60,8 @@ jobs:
 
       - name: Fix init.d line endings
         run: |
-          find package/openwrt-xray/files/etc/init.d -type f -exec dos2unix {} +
+          cd sdk/package/openwrt-xray/files/etc/init.d || exit 0
+          find . -type f -exec dos2unix {} +
 
       - name: Setup Go
         uses: actions/setup-go@v6
