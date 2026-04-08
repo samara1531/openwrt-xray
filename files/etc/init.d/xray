@@ -29,8 +29,7 @@ start_service() {
 	procd_set_param command "$PROG" run
 	[ -n "$confdir" ] && procd_append_param command -confdir "$confdir"
 	[ -n "$conffiles" ] && {
-		for i in $conffiles
-		do
+		for i in $conffiles; do
 			procd_append_param command -config "$i"
 		done
 	}
