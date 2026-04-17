@@ -1,4 +1,4 @@
-# Xray for OpenWrt
+# Xray-core for OpenWrt
 
 Just the binary file for various platforms, without cgo or any init scripts.
 
